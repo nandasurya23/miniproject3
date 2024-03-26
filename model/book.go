@@ -20,7 +20,6 @@ type Book struct {
 	Stok      uint           `json:"stok"`
 }
 
-// Implementasi GORM Auto Migrate
 func AutoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(&Book{})
 }

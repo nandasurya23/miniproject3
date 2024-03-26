@@ -19,7 +19,6 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	// Load .env file
 	_ = os.Setenv("DB_HOST", "localhost")
 	_ = os.Setenv("DB_PORT", "3306")
 	_ = os.Setenv("DB_USER", "root")

@@ -71,7 +71,7 @@ func importDataFromCSV(db *gorm.DB, csvFilePath string) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	reader.FieldsPerRecord = -1 // Allow variable number of fields per record
+	reader.FieldsPerRecord = -1 
 
 	records, err := reader.ReadAll()
 	if err != nil {
@@ -84,7 +84,6 @@ func importDataFromCSV(db *gorm.DB, csvFilePath string) {
 		book.ISBN = record[1]
 		book.Penulis = record[2]
 		
-		// Convert Tahun to uint
 		tahun, err := strconv.ParseUint(record[3], 10, 32)
 		if err != nil {
 			fmt.Println("Error parsing Tahun:", err)
@@ -95,7 +94,6 @@ func importDataFromCSV(db *gorm.DB, csvFilePath string) {
 		book.Judul = record[4]
 		book.Gambar = record[5]
 		
-		// Convert Stok to uint
 		stok, err := strconv.ParseUint(record[6], 10, 32)
 		if err != nil {
 			fmt.Println("Error parsing Stok:", err)
@@ -106,11 +104,9 @@ func importDataFromCSV(db *gorm.DB, csvFilePath string) {
 		book.CreatedAt = time.Now()
 		book.UpdatedAt = time.Now()
 
-		// Check if book with ISBN already exists
 		var existingBook model.Book
 		result := db.Where("isbn = ?", book.ISBN).First(&existingBook)
 		if result.Error == nil {
-			// Book exists, update it
 			existingBook.Penulis = book.Penulis
 			existingBook.Tahun = book.Tahun
 			existingBook.Judul = book.Judul
@@ -118,7 +114,6 @@ func importDataFromCSV(db *gorm.DB, csvFilePath string) {
 			existingBook.Stok = book.Stok
 			db.Save(&existingBook)
 		} else if result.Error == gorm.ErrRecordNotFound {
-			// Book doesn't exist, create it
 			db.Create(&book)
 		} else {
 			fmt.Println("Error querying database:", result.Error)
